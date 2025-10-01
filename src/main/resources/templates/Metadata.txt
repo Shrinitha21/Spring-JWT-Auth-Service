@@ -1,0 +1,106 @@
+Project Metadata: JWT Authentication with Spring Boot
+🏗️ Architecture
+
+Type: Monolithic Spring Boot application (can be extended to microservices).
+
+Authentication style: Stateless, token-based authentication using JWT.
+
+Authorization: Role-based access control (RBAC).
+
+⚙️ Tech Stack
+
+Java: 17+ (or 11+ depending on setup).
+
+Spring Boot: v3.x
+
+Spring Security: For securing endpoints & handling authentication/authorization.
+
+JWT (JSON Web Tokens): For token generation and validation.
+
+Database: PostgreSQL / H2 (for dev/testing).
+
+Password hashing: BCrypt (PasswordEncoder).
+
+Build tool: Maven / Gradle.
+
+🔑 Core Components
+
+DTOs
+
+AuthRequest: Carries login data (username + password).
+
+AuthResponse: Returns generated JWT token to the client.
+
+Entity
+
+User: Represents users in the system with fields like id, username, password, roles.
+
+Service Layer
+
+UserService: Handles user persistence, registration, and lookup.
+
+Security Layer
+
+JwtUtil: Handles token creation, signing, parsing, and expiration validation.
+
+JwtFilter (extends OncePerRequestFilter): Intercepts every request, extracts & validates JWT, and sets authentication in SecurityContext.
+
+SecurityConfig: Configures Spring Security (permitted endpoints, authentication rules, JWT filter integration).
+
+Controllers
+
+AuthController: Handles /signup and /login.
+
+Example secured controllers: /api/hello, /api/profile accessible only with valid JWT.
+
+🔒 Security Workflow
+
+Signup → User registers → password stored as BCrypt hash.
+
+Login → User sends credentials → system validates → generates JWT with username + roles + expiration.
+
+Subsequent Requests → User sends JWT in Authorization: Bearer <token> header.
+
+JwtFilter intercepts → validates token → sets authentication in SecurityContext.
+
+Controller methods can access:
+
+Principal → logged-in username.
+
+Authentication → roles, details.
+
+Access Control → Enforced via .anyRequest().authenticated() in config or @PreAuthorize on methods.
+
+📜 Properties (example)
+server.port=8080
+
+jwt.secret=mysupersecretkey123456
+jwt.expiration=3600000   # 1 hour in ms
+
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.hibernate.ddl-auto=update
+
+📊 Example API Endpoints
+
+POST /api/auth/signup → Register user.
+
+POST /api/auth/login → Authenticate & return JWT.
+
+GET /api/hello → Secured endpoint (requires valid JWT).
+
+GET /api/profile → Returns logged-in user info from JWT.
+
+🚀 Features
+
+Stateless authentication (no HTTP sessions).
+
+Password hashing with BCrypt.
+
+JWT-based token validation.
+
+Role-based access with Spring Security.
+
+Easily extendable to microservices (JWT can be shared across services).

@@ -1,0 +1,21 @@
+SecurityConfig builds the filter chain at startup.
+
+JwtFilter runs on every request (before controller).
+
+JwtUtil validates token → if valid, creates Authentication.
+
+SecurityContextHolder stores authentication info per request (thread-local).
+
+Controller sees authenticated user via Principal / Authentication.
+
+No server session — authentication is stateless thanks to JWT.
+
+Benefits of JWT in microservices
+
+✅ Stateless → no session storage needed in each service.
+
+✅ Portable → one JWT can be validated by many services.
+
+✅ Scalable → services don’t need to share session data.
+
+✅ Fine-grained access control → roles/claims inside JWT help in RBAC.
